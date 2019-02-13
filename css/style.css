@@ -1,0 +1,20 @@
+.skipButton {
+    bottom: 74px;
+    right: 0px;
+    font-size: 40px;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-right: 0;
+    box-sizing: content-box;
+    color: #fff;
+    direction: ltr;
+    font-size: 18px;
+    line-height: normal;
+    min-width: 0;
+    padding: 10px 6px 8px 10px;
+    width: auto;
+    text-align: center;
+    cursor: pointer;
+}
