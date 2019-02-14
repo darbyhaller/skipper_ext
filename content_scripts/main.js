@@ -16,6 +16,7 @@ function YoutubePlayerManager() {
 	this.timestep = 100
 	this.player = null
 	this.videoFrame = null
+	this.chances_to_load = 0
 	//list of activeSegments
 	//each segment contains {skipButton, data}
 	//skipButton is a ref to the html skipButton
@@ -65,7 +66,8 @@ function YoutubePlayerManager() {
 		this.player = document.querySelector("video");
 		this.videoFrame = document.getElementById("movie_player");
 		this.category = getGameTitle()
-		return (this.player && this.videoFrame && this.category)
+		this.chances_to_load ++
+		return (this.player && this.videoFrame && (this.category || this.chances_to_load > 10))
 	}
 	//manages showing and hiding of skip buttons based on what segment we are in
 	this.startCoreSegmentCheckingLoop = function(segments) {
@@ -148,7 +150,11 @@ function getGameTitle() {
 	if(meta_contents) {
 		const game_title_div = meta_contents.querySelector('#title')
 		if (game_title_div) {
-			return game_title_div.innerHTML.replace(/\s/g,'')
+			const game_title = game_title_div.innerHTML.replace(/\s/g,'')
+			if(game_title)
+				return game_title
+			else
+				return null
 		}
 	}
 	return null
