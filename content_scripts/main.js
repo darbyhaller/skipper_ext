@@ -3,6 +3,7 @@
 //list of segments
 //each segment contains: {start, end, desc}
 var pmanager = null
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	const url = new URL(request.data.url)
 	const v = url.searchParams.get('v')
@@ -12,11 +13,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		pmanager = new YoutubePlayerManager()
 	}
 })
+
 function YoutubePlayerManager() {
 	this.timestep = 100
 	this.player = null
 	this.videoFrame = null
-	this.chances_to_load = 0
 	//list of activeSegments
 	//each segment contains {skipButton, data}
 	//skipButton is a ref to the html skipButton
@@ -45,7 +46,7 @@ function YoutubePlayerManager() {
 					if (xhr != null)
 						xhr.abort()
 					xhr = new XMLHttpRequest()
-					xhr.open('GET', 'https://bhuddy.com/times?content_id=' + contentId + '&category=' + self.category)
+					xhr.open('GET', 'https://bhuddy.com/times?content_id=' + contentId)
 					xhr.onload = function() {
 						if (xhr.status === 200) {
 							window.clearInterval(timesLoadedChecker)
@@ -65,9 +66,7 @@ function YoutubePlayerManager() {
 	this.loadPlayer = function() {
 		this.player = document.querySelector("video");
 		this.videoFrame = document.getElementById("movie_player");
-		this.category = getGameTitle()
-		this.chances_to_load ++
-		return (this.player && this.videoFrame && (this.category || this.chances_to_load > 10))
+		return (this.player && this.videoFrame)
 	}
 	//manages showing and hiding of skip buttons based on what segment we are in
 	this.startCoreSegmentCheckingLoop = function(segments) {
@@ -89,12 +88,8 @@ function YoutubePlayerManager() {
 	this.enterSegmentAction = function(segmentData) {
 		if (segmentData.desc == 'dead')
 			return this.showSkipper(segmentData)
-		if (segmentData.desc == 'alive')
-			return {
-				data: segmentData
-			}
 		else
-			return null
+			return { data: segmentData }
 	}
 	this.leaveSegmentAction = function(activeSegment) {
 		if (activeSegment.data.desc == 'dead')
@@ -105,7 +100,7 @@ function YoutubePlayerManager() {
 	//TODO: stackable (can have multiple at once) -- this would be good, at least
 	this.showSkipper = function(segmentData) {
 		const skipButton = document.createElement("div")
-		skipButton.innerHTML = skipText(segmentData.desc)
+		skipButton.innerHTML = skipText(segmentData.desc) + ' >|'
 		skipButton.onclick = () => this.skipToEndOfSegment(segmentData)
 		skipButton.onmouseover = () => skipButton.style.border = "1px solid rgba(255,255,255,1)"
 		skipButton.onmouseout = () => skipButton.style.border = "1px solid rgba(255,255,255,.5)"
@@ -143,19 +138,4 @@ function skipText(desc) {
 			return "Skip to Respawn"
 	}
 	return ""
-}
-
-function getGameTitle() {
-	const meta_contents = document.getElementById('meta-contents')
-	if(meta_contents) {
-		const game_title_div = meta_contents.querySelector('#title')
-		if (game_title_div) {
-			const game_title = game_title_div.innerHTML.replace(/\s/g,'')
-			if(game_title)
-				return game_title
-			else
-				return null
-		}
-	}
-	return null
 }
