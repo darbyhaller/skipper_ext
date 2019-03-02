@@ -1,9 +1,9 @@
 {
     "update_url": "https://clients2.google.com/service/update2/crx",
     "manifest_version": 2,
-    "name": "Skipper",
-    "version": "0.0.1.0",
-    "description": "Skip Death Timers & More in Youtube Videos",
+    "name": "Smite Death Skipper",
+    "version": "1.0.0.0",
+    "description": "Skip Death Screens in Smite Videos",
     "background": {
         "persistent": true,
         "scripts": [
