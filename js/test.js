@@ -49,3 +49,22 @@ function old_init() {
         requestTimes()
     }, 500)
 }
+function stress_test() {
+	var responses = 0
+	window.setInterval(function() {
+		const xhr = new XMLHttpRequest()
+		xhr.open('GET', 'https://bhuddy.com/times?content_id=' + "DtDwJZYkqhI")
+		xhr.onload = function() {
+			if (xhr.status === 200) {
+				responses ++
+			}
+		}
+		xhr.send()
+	}, 10)
+	window.setTimeout(function() {
+		responses = 0
+		window.setTimeout(function() {
+			console.log(responses)
+		}, 10000)
+	}, 10000)
+}
